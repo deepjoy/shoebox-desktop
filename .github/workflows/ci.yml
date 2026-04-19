@@ -42,6 +42,8 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: "src-tauri -> target"
+          shared-key: tauri-${{ matrix.rust-target }}
+          cache-on-failure: true
 
       - name: Install Linux system dependencies
         if: runner.os == 'Linux'
@@ -61,5 +63,5 @@ jobs:
       - name: Verify version sync
         run: pnpm sync-versions
 
-      - name: Tauri build (debug)
-        run: pnpm tauri build --target ${{ matrix.rust-target }} --debug
+      - name: Tauri build (debug, no bundle)
+        run: pnpm tauri build --target ${{ matrix.rust-target }} --debug --no-bundle
