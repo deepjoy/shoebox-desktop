@@ -10,7 +10,7 @@ type Props = {
   scrollRoot: React.RefObject<HTMLElement | null>;
 };
 
-export function DynamicIsland({ scrollRoot }: Props) {
+export function FloatingBar({ scrollRoot }: Props) {
   const [hovered, setHovered] = useState(false);
   const [floating, setFloating] = useState(false);
   const lastScrollY = useRef(0);
@@ -70,14 +70,14 @@ export function DynamicIsland({ scrollRoot }: Props) {
           pointerEvents="auto"
           overflow="hidden"
         >
-          <IslandContent expanded={expanded} />
+          <BarContent expanded={expanded} />
         </Box>
       </Flex>
     </Box>
   );
 }
 
-function IslandContent({ expanded }: { expanded: boolean }) {
+function BarContent({ expanded }: { expanded: boolean }) {
   return (
     <Flex align="center" height="100%" px="4" gap="3">
       <Flex align="center" gap="2" flexShrink={0}>

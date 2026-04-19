@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Box, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import { Provider } from "./ui/provider";
 import { LeftNav } from "./layout/LeftNav";
-import { DynamicIsland } from "./layout/DynamicIsland";
+import { FloatingBar } from "./layout/FloatingBar";
 import { useUpdate } from "./updates/useUpdate";
 import { UpdateDialog } from "./updates/UpdateDialog";
 
@@ -30,11 +30,11 @@ function App() {
           overflowY="auto"
           position="relative"
         >
-          <DynamicIsland scrollRoot={scrollRef} />
+          <FloatingBar scrollRoot={scrollRef} />
           <Stack px="10" pb="20" gap="6" maxWidth="960px" mx="auto">
             <Heading size="xl">Welcome back</Heading>
             <Text color="gray.600">
-              Hover the island at the top to expand the bar. Scroll down, then
+              Hover the pill at the top to expand the bar. Scroll down, then
               back up to see it float.
             </Text>
             {Array.from({ length: 24 }).map((_, i) => (
@@ -52,7 +52,7 @@ function App() {
                 </Heading>
                 <Text color="gray.600">
                   Placeholder content so the page is long enough to scroll. The
-                  dynamic island reserves space at the top and becomes floating
+                  floating bar reserves space at the top and becomes floating
                   when you scroll back up.
                 </Text>
               </Box>
