@@ -27,6 +27,20 @@ jobs:
           cache-on-failure: true
           save-if: false
 
+      # release-plz runs `cargo package --workspace` against the previous
+      # tag's worktree to diff sources, which compiles the Tauri crate and
+      # therefore needs its native deps.
+      - name: Install Linux system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libgtk-3-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            patchelf \
+            libsoup-3.0-dev
+
       - uses: release-plz/action@v0.5
         with:
           command: release-pr
