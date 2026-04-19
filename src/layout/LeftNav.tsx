@@ -1,6 +1,16 @@
 import { useState } from "react";
-import { Box, Flex, IconButton, Text, VStack } from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  Flex,
+  IconButton,
+  Menu,
+  Portal,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { css } from "../../styled-system/css";
+import type { UpdateState } from "../updates/useUpdate";
 
 type NavItem = { label: string; icon: string };
 
@@ -12,9 +22,15 @@ const items: NavItem[] = [
   { label: "Trash", icon: "⌫" },
 ];
 
-export function LeftNav() {
+type Props = {
+  updateState: UpdateState;
+  onShowUpdate: () => void;
+};
+
+export function LeftNav({ updateState, onShowUpdate }: Props) {
   const [collapsed, setCollapsed] = useState(false);
   const width = collapsed ? "64px" : "240px";
+  const updateAvailable = updateState.status === "available";
 
   return (
     <Flex
@@ -75,43 +91,144 @@ export function LeftNav() {
         ))}
       </VStack>
 
-      <Flex
-        align="center"
-        gap="3"
-        px="3"
-        py="3"
+      <Box
         borderTopWidth="1px"
         borderColor="inherit"
         position="sticky"
         bottom={0}
         bg="inherit"
       >
-        <Box
-          width="32px"
-          height="32px"
-          borderRadius="full"
-          bgGradient="linear(to-br, teal.400, purple.500)"
-          color="white"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          fontWeight="bold"
-          fontSize="sm"
-          flexShrink={0}
-        >
-          DJ
-        </Box>
-        {!collapsed && (
-          <Box minWidth="0">
-            <Text fontSize="sm" fontWeight="medium" truncate>
-              DJ Majumdar
-            </Text>
-            <Text fontSize="xs" color="gray.500" truncate>
-              claude@deepjoy.us
-            </Text>
-          </Box>
-        )}
-      </Flex>
+        <Menu.Root positioning={{ placement: "top-start" }}>
+          <Menu.Trigger asChild>
+            <Flex
+              as="button"
+              align="center"
+              gap="3"
+              px="3"
+              py="3"
+              width="100%"
+              textAlign="left"
+              cursor="pointer"
+              _hover={{ bg: "gray.50" }}
+              _focusVisible={{ outline: "2px solid", outlineColor: "teal.400" }}
+            >
+              <Box position="relative" flexShrink={0}>
+                <Box
+                  width="32px"
+                  height="32px"
+                  borderRadius="full"
+                  bgGradient="linear(to-br, teal.400, purple.500)"
+                  color="white"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  fontWeight="bold"
+                  fontSize="sm"
+                >
+                  DJ
+                </Box>
+                {updateAvailable && (
+                  <Box
+                    position="absolute"
+                    top="-2px"
+                    right="-2px"
+                    width="10px"
+                    height="10px"
+                    borderRadius="full"
+                    bg="green.400"
+                    borderWidth="2px"
+                    borderColor="white"
+                    aria-label="Update available"
+                  />
+                )}
+              </Box>
+              {!collapsed && (
+                <Box minWidth="0" flex="1">
+                  <Text fontSize="sm" fontWeight="medium" truncate>
+                    DJ Majumdar
+                  </Text>
+                  <Text fontSize="xs" color="gray.500" truncate>
+                    claude@deepjoy.us
+                  </Text>
+                </Box>
+              )}
+              {!collapsed && (
+                <Text fontSize="md" color="gray.400" flexShrink={0}>
+                  ⋯
+                </Text>
+              )}
+            </Flex>
+          </Menu.Trigger>
+          <Portal>
+            <Menu.Positioner>
+              <Menu.Content minWidth="220px">
+                <Menu.Item value="profile">
+                  <Menu.ItemText>Profile</Menu.ItemText>
+                </Menu.Item>
+                <Menu.Item value="settings">
+                  <Menu.ItemText>Settings</Menu.ItemText>
+                </Menu.Item>
+                <Menu.Separator />
+                <UpdateMenuEntry
+                  updateState={updateState}
+                  onShowUpdate={onShowUpdate}
+                />
+                <Menu.Separator />
+                <Menu.Item value="sign-out" color="red.600">
+                  <Menu.ItemText>Sign out</Menu.ItemText>
+                </Menu.Item>
+              </Menu.Content>
+            </Menu.Positioner>
+          </Portal>
+        </Menu.Root>
+      </Box>
     </Flex>
+  );
+}
+
+function UpdateMenuEntry({
+  updateState,
+  onShowUpdate,
+}: {
+  updateState: UpdateState;
+  onShowUpdate: () => void;
+}) {
+  const { status, update, checkForUpdate } = updateState;
+
+  if (status === "available" && update) {
+    return (
+      <Menu.Item
+        value="update"
+        onClick={onShowUpdate}
+        closeOnSelect
+      >
+        <Flex align="center" justify="space-between" width="100%" gap="3">
+          <Menu.ItemText>Update available</Menu.ItemText>
+          <Badge colorPalette="green" variant="subtle">
+            v{update.version}
+          </Badge>
+        </Flex>
+      </Menu.Item>
+    );
+  }
+
+  const label =
+    status === "checking"
+      ? "Checking for updates…"
+      : status === "up-to-date"
+        ? "You're up to date"
+        : status === "error"
+          ? "Check for updates (retry)"
+          : "Check for updates";
+
+  return (
+    <Menu.Item
+      value="check-update"
+      onClick={() => checkForUpdate()}
+      disabled={status === "checking"}
+      closeOnSelect={false}
+    >
+      <Menu.ItemText>{label}</Menu.ItemText>
+    </Menu.Item>
   );
 }

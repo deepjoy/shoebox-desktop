@@ -1,29 +1,27 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Box, Flex, Heading, Stack, Text } from "@chakra-ui/react";
-import { check } from "@tauri-apps/plugin-updater";
-import { relaunch } from "@tauri-apps/plugin-process";
 import { Provider } from "./ui/provider";
 import { LeftNav } from "./layout/LeftNav";
 import { DynamicIsland } from "./layout/DynamicIsland";
-
-async function runUpdateCheck() {
-  const update = await check();
-  if (!update) return;
-  await update.downloadAndInstall();
-  await relaunch();
-}
+import { useUpdate } from "./updates/useUpdate";
+import { UpdateDialog } from "./updates/UpdateDialog";
 
 function App() {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const updateState = useUpdate();
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
-    runUpdateCheck().catch((err) => console.error("update check failed", err));
-  }, []);
+    if (updateState.status === "available") setDialogOpen(true);
+  }, [updateState.status]);
 
   return (
     <Provider>
       <Flex minHeight="100vh" width="100vw" align="stretch" bg="gray.50">
-        <LeftNav />
+        <LeftNav
+          updateState={updateState}
+          onShowUpdate={() => setDialogOpen(true)}
+        />
         <Box
           ref={scrollRef}
           as="main"
@@ -62,6 +60,11 @@ function App() {
           </Stack>
         </Box>
       </Flex>
+      <UpdateDialog
+        state={updateState}
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+      />
     </Provider>
   );
 }
