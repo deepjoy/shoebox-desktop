@@ -123,15 +123,6 @@ jobs:
       - name: Sync versions
         run: pnpm sync-versions
 
-      - name: Debug signing env
-        env:
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-        shell: bash
-        run: |
-          echo "key length: ${#TAURI_SIGNING_PRIVATE_KEY}"
-          echo "password length: ${#TAURI_SIGNING_PRIVATE_KEY_PASSWORD}"
-
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
