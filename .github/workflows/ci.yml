@@ -41,7 +41,7 @@ jobs:
 
       - uses: Swatinem/rust-cache@v2
         with:
-          workspaces: "src-tauri -> target"
+          workspaces: ". -> src-tauri/target"
           shared-key: tauri-${{ matrix.rust-target }}
           cache-on-failure: true
 

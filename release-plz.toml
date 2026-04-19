@@ -14,4 +14,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [[package]]
 name = "shoebox-desktop"
-changelog_path = "CHANGELOG.md"
+changelog_path = "src-tauri/CHANGELOG.md"
+changelog_include = ["shoebox-app-shell"]
+
+# Virtual shim. Never released — only exists so release-plz attributes
+# frontend/repo-root commits to a package. See root Cargo.toml.
+[[package]]
+name = "shoebox-app-shell"
+release = false
+changelog_update = false
+git_tag_enable = false
+git_release_enable = false
+publish = false
