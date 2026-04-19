@@ -27,3 +27,4 @@ dist-ssr
 # Tauri / Rust build output
 src-tauri/target
 src-tauri/gen/schemas
+styled-system

@@ -1,0 +1,69 @@
+{
+  "name": "Shoebox Desktop Dev",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "REMOTE_USER": "${localEnv:USER}"
+    }
+  },
+  "features": {
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {},
+    "ghcr.io/devcontainers/features/common-utils:2.5.5": {
+      "configureZshAsDefaultShell": true,
+      "username": "${localEnv:USER}"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/aws-cli:1.1.2": {}
+  },
+  "remoteUser": "${localEnv:USER}",
+  "mounts": [
+    "source=/etc/localtime,target=/etc/localtime,type=bind,readonly",
+    "source=/etc/timezone,target=/etc/timezone,type=bind,readonly",
+    "source=${localEnv:HOME}/.ssh,target=/home/${localEnv:USER}/.ssh,type=bind,readonly",
+    "source=${localEnv:HOME}/.claude,target=/home/${localEnv:USER}/.claude,type=bind",
+    "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind",
+    "source=${localEnv:HOME}/.Xauthority,target=/home/${localEnv:USER}/.Xauthority,type=bind"
+  ],
+  "containerEnv": {
+    "DISPLAY": "${localEnv:DISPLAY}",
+    "NO_AT_BRIDGE": "1"
+  },
+  "runArgs": [
+    "--net=host",
+    "--ipc=host",
+    "--privileged",
+    "--device=/dev/dri",
+    "--group-add=105"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-containers",
+        "qwtel.sqlite-viewer",
+        "rust-lang.rust-analyzer",
+        "tamasfe.even-better-toml",
+        "bierner.markdown-mermaid",
+        "tauri-apps.tauri-vscode"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "claude-code.attribution": {
+          "commit": "",
+          "pr": ""
+        },
+        "editor.fontFamily": "'Fira Code', 'monospace', monospace",
+        "editor.fontLigatures": true,
+        "eslint.validate": [
+          "javascript",
+          "javascriptreact",
+          "typescript",
+          "typescriptreact"
+        ],
+        "terminal.integrated.fontFamily": "'MesloLGS NF', 'monospace', monospace",
+        "terminal.integrated.fontLigatures.enabled": true
+      }
+    }
+  }
+}
