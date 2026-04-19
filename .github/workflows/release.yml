@@ -82,7 +82,7 @@ jobs:
           - os: windows-latest
             rust-target: x86_64-pc-windows-msvc
             bundles: "--bundles nsis"
-          - os: ubuntu-22.04
+          - os: ubuntu-24.04
             rust-target: x86_64-unknown-linux-gnu
             bundles: "--bundles deb,appimage"
     steps:
@@ -95,7 +95,18 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: pnpm
+
+      - name: Resolve pnpm store path
+        id: pnpm-store
+        shell: bash
+        run: echo "path=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-store.outputs.path }}
+          key: pnpm-${{ matrix.rust-target }}-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: pnpm-${{ matrix.rust-target }}-
 
       - uses: dtolnay/rust-toolchain@stable
         with:
@@ -103,7 +114,7 @@ jobs:
 
       - uses: Swatinem/rust-cache@v2
         with:
-          workspaces: "src-tauri -> target"
+          workspaces: ". -> src-tauri/target"
           shared-key: tauri-${{ matrix.rust-target }}
           cache-on-failure: true
 

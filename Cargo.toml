@@ -1,0 +1,18 @@
+[workspace]
+members = ["src-tauri"]
+resolver = "2"
+
+# The "shoebox-app-shell" package exists solely so release-plz can
+# attribute commits that touch frontend code (src/, public/, package.json,
+# Vite/Panda config, workflows, etc.) to a Cargo package. The
+# shoebox-desktop package pulls those commits into its changelog via
+# `changelog_include` in release-plz.toml. This package is never built,
+# tagged, released, or published.
+[package]
+name = "shoebox-app-shell"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[lib]
+path = "release-plz-shim.rs"
