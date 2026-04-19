@@ -78,7 +78,7 @@ jobs:
         include:
           - os: macos-14
             rust-target: aarch64-apple-darwin
-            bundles: ""
+            bundles: "--bundles app,dmg"
           - os: windows-latest
             rust-target: x86_64-pc-windows-msvc
             bundles: "--bundles nsis"
@@ -126,9 +126,12 @@ jobs:
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           releaseId: ${{ needs.create-release.outputs.release_id }}
           args: --target ${{ matrix.rust-target }} ${{ matrix.bundles }}
+          updaterJsonPreferNsis: true
 
   publish-release:
     name: Publish release
