@@ -10,13 +10,22 @@ permissions:
 
 jobs:
   release-pr:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-unknown-linux-gnu
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: ". -> src-tauri/target"
+          shared-key: tauri-x86_64-unknown-linux-gnu
+          cache-on-failure: true
+          save-if: false
 
       - uses: release-plz/action@v0.5
         with:
