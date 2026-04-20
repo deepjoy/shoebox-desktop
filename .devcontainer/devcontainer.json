@@ -24,11 +24,14 @@
     "source=${localEnv:HOME}/.ssh,target=/home/${localEnv:USER}/.ssh,type=bind,readonly",
     "source=${localEnv:HOME}/.claude,target=/home/${localEnv:USER}/.claude,type=bind",
     "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind",
-    "source=${localEnv:HOME}/.Xauthority,target=/home/${localEnv:USER}/.Xauthority,type=bind"
+    "source=${localEnv:HOME}/.Xauthority,target=/home/${localEnv:USER}/.Xauthority,type=bind",
+    "source=${localEnv:XDG_RUNTIME_DIR},target=${localEnv:XDG_RUNTIME_DIR},type=bind"
   ],
   "containerEnv": {
     "DISPLAY": "${localEnv:DISPLAY}",
-    "NO_AT_BRIDGE": "1"
+    "NO_AT_BRIDGE": "1",
+    "XDG_RUNTIME_DIR": "${localEnv:XDG_RUNTIME_DIR}",
+    "DBUS_SESSION_BUS_ADDRESS": "unix:path=${localEnv:XDG_RUNTIME_DIR}/bus"
   },
   "runArgs": [
     "--net=host",
