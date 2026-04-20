@@ -1,5 +1,7 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 
+mod secrets;
+
 /// Example Tauri command invoked from the frontend.
 #[tauri::command]
 fn greet(name: &str) -> String {
