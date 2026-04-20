@@ -118,6 +118,32 @@ mod tests {
         assert_eq!(reloaded.as_ref(), first.as_ref());
     }
 
+    /// Round-trips against the real OS keychain. Gated behind `--ignored`
+    /// so it is skipped in CI and on machines without a running Secret
+    /// Service. Run with:
+    ///
+    ///   cargo test --lib secrets::root::tests::real_backend -- --ignored
+    ///
+    /// Uses a test-specific account name and deletes it afterwards so the
+    /// user's real `root-key-v1` entry is never touched.
+    #[test]
+    #[ignore]
+    fn real_backend_roundtrip_and_derive() {
+        let entry = Entry::new(SERVICE, "root-key-smoke-test").unwrap();
+        let _ = entry.delete_credential();
+
+        let first = load_or_init_with(&entry).expect("create against real backend");
+        let second = load_or_init_with(&entry).expect("reload from real backend");
+        assert_eq!(first.as_ref(), second.as_ref());
+
+        // Same root → same derived subkeys.
+        let a = super::super::derive::storage_key(&first);
+        let b = super::super::derive::storage_key(&second);
+        assert_eq!(a.0.as_ref(), b.0.as_ref());
+
+        entry.delete_credential().expect("cleanup");
+    }
+
     #[test]
     fn save_with_overwrite_replaces_existing() {
         use_mock_backend();

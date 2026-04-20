@@ -23,6 +23,8 @@ RUN rm -rf /var/lib/apt/lists/* && \
         libwebkit2gtk-4.1-dev libjavascriptcoregtk-4.1-dev \
         libsoup-3.0-dev libgtk-3-dev libappindicator3-dev librsvg2-dev \
         libssl-dev \
+        # Keychain (Secret Service) build + debug tools
+        libdbus-1-dev libsecret-tools \
         # X11 forwarding
         xauth dbus-x11 \
         libcanberra-gtk3-module \
