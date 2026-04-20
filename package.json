@@ -4,17 +4,19 @@
   "version": "0.2.1",
   "type": "module",
   "scripts": {
-    "prepare": "panda codegen",
-    "dev": "panda codegen && vite",
-    "build": "panda codegen && tsc && vite build",
+    "prepare": "panda codegen && tsr generate",
+    "dev": "panda codegen && tsr generate && vite",
+    "build": "panda codegen && tsr generate && tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
     "panda": "panda",
+    "routes:generate": "tsr generate",
     "sync-versions": "node scripts/sync-versions.mjs"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.34.0",
     "@emotion/react": "^11.14.0",
+    "@tanstack/react-router": "^1.168.23",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",
     "@tauri-apps/plugin-process": "^2",
@@ -25,6 +27,9 @@
   "devDependencies": {
     "@chakra-ui/panda-preset": "^3.34.0",
     "@pandacss/dev": "^1.10.0",
+    "@tanstack/react-router-devtools": "^1.166.13",
+    "@tanstack/router-cli": "^1.166.33",
+    "@tanstack/router-plugin": "^1.167.22",
     "@tauri-apps/cli": "^2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",

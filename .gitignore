@@ -27,3 +27,6 @@ dist-ssr
 # Tauri / Rust build output
 src-tauri/target
 styled-system
+
+# TanStack Router codegen output
+src/routeTree.gen.ts
