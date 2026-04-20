@@ -10,7 +10,7 @@ resolver = "2"
 # tagged, released, or published.
 [package]
 name = "shoebox-app-shell"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 publish = false
 
