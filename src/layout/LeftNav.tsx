@@ -9,6 +9,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import { useNavigate } from "@tanstack/react-router";
 import { css } from "../../styled-system/css";
 import type { UpdateState } from "../updates/useUpdate";
 
@@ -31,6 +32,7 @@ export function LeftNav({ updateState, onShowUpdate }: Props) {
   const [collapsed, setCollapsed] = useState(false);
   const width = collapsed ? "64px" : "240px";
   const updateAvailable = updateState.status === "available";
+  const navigate = useNavigate();
 
   return (
     <Flex
@@ -165,7 +167,10 @@ export function LeftNav({ updateState, onShowUpdate }: Props) {
                 <Menu.Item value="profile">
                   <Menu.ItemText>Profile</Menu.ItemText>
                 </Menu.Item>
-                <Menu.Item value="settings">
+                <Menu.Item
+                  value="settings"
+                  onClick={() => navigate({ to: "/settings/secrets" })}
+                >
                   <Menu.ItemText>Settings</Menu.ItemText>
                 </Menu.Item>
                 <Menu.Separator />
