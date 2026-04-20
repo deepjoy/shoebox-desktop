@@ -4,7 +4,7 @@ mod secrets;
 
 use std::sync::Arc;
 
-use secrets::Secrets;
+use secrets::{Secrets, SecretsError};
 use serde::Serialize;
 use tauri::Manager;
 
@@ -25,6 +25,24 @@ fn secrets_status(_secrets: tauri::State<'_, Arc<Secrets>>) -> SecretsStatus {
     SecretsStatus { initialized: true }
 }
 
+#[tauri::command]
+fn secrets_export(
+    passphrase: String,
+    secrets: tauri::State<'_, Arc<Secrets>>,
+) -> Result<String, SecretsError> {
+    secrets.export(&passphrase)
+}
+
+#[tauri::command]
+fn secrets_import(
+    armor: String,
+    passphrase: String,
+    overwrite: bool,
+    secrets: tauri::State<'_, Arc<Secrets>>,
+) -> Result<(), SecretsError> {
+    secrets.import(&armor, &passphrase, overwrite)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -36,7 +54,12 @@ pub fn run() {
             app.manage(Arc::new(secrets));
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![greet, secrets_status])
+        .invoke_handler(tauri::generate_handler![
+            greet,
+            secrets_status,
+            secrets_export,
+            secrets_import,
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
