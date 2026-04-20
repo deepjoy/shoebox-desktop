@@ -39,7 +39,8 @@ jobs:
             libayatana-appindicator3-dev \
             librsvg2-dev \
             patchelf \
-            libsoup-3.0-dev
+            libsoup-3.0-dev \
+            libdbus-1-dev
 
       - uses: release-plz/action@v0.5
         with:
