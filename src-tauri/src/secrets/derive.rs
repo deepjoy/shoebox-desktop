@@ -2,7 +2,7 @@ use hkdf::Hkdf;
 use sha2::Sha256;
 use zeroize::Zeroizing;
 
-use super::root::{RootKey, ROOT_KEY_LEN};
+use super::root::RootKey;
 
 pub const SUBKEY_LEN: usize = 32;
 pub type SubKey = Zeroizing<[u8; SUBKEY_LEN]>;
@@ -32,6 +32,7 @@ pub fn comms_key(root: &RootKey) -> CommsKey {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use super::super::root::ROOT_KEY_LEN;
 
     fn fixed_root(byte: u8) -> RootKey {
         Zeroizing::new([byte; ROOT_KEY_LEN])
